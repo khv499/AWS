@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!-- Javascript SDK-->
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="js/amazon-cognito-auth.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script>
+    <script src="js/amazon-cognito-identity.min.js"></script>
+    <script src="js/config.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/signUp.css">
+
+    <script type="text/javascript">
+        var username;
+        var name;
+        var email;
+        var phonenumber;
+        var occupation;
+        var gender;
+        var age;
+        var userLocation;
+        var password;
+        var poolData;
+        var userPool;
+        var userData;
+
+        var signUpButton = function () {
+            username = document.getElementById("usernameSignUp").value;
+            name = document.getElementById("nameSignUp").value;
+            email = document.getElementById("emailSignUp").value;
+            phonenumber = document.getElementById("phonenumberSignUp").value;
+            occupation = document.getElementById("occupationSignUp").value;
+            gender = document.getElementById("genderSignUp").value;
+            age = document.getElementById("ageSignUp").value;
+            userLocation = document.getElementById("locationSignUp").value;
+ 
+            if (document.getElementById("passwordSignUp").value != document.getElementById("confirmPasswordSignUp").value) {
+                alert("Passwords Do Not Match!")
+                throw "Passwords Do Not Match!"
+            } else {
+                password = document.getElementById("passwordSignUp").value;
+            }
+            poolData = {
+                UserPoolId: _config.cognito.userPoolId,
+                ClientId: _config.cognito.clientId
+            };
+
+            userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+            userData = {
+                Username: username,
+                Pool: userPool
+            };
+
+            var attributeList = [];
+
+            var dataEmail = {
+                Name: 'email',
+                Value: email
+            };
+            var dataPhoneNumber = {
+                Name: 'phone_number',
+                Value: phonenumber
+            };
+            var dataName = {
+                Name: 'name',
+                Value: name
+            };
+            var dataGender = {
+                Name: 'gender',
+                Value: gender
+            };
+            var dataAge = {
+                Name: 'custom:age',
+                Value: age
+            };
+            var dataLocation = {
+                Name: 'custom:location',
+                Value: userLocation
+            };
+            var dataOccupation = {
+                Name: 'custom:Occupation',
+                Value: occupation
+            };
+            var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
+            var attributePhoneNumber = new AmazonCognitoIdentity.CognitoUserAttribute(dataPhoneNumber);
+            var attributeName = new AmazonCognitoIdentity.CognitoUserAttribute(dataName);
+            var attributeOccupation = new AmazonCognitoIdentity.CognitoUserAttribute(dataOccupation);
+            var attributeGender = new AmazonCognitoIdentity.CognitoUserAttribute(dataGender);
+            var attributeAge = new AmazonCognitoIdentity.CognitoUserAttribute(dataAge);
+            var attributeLocation = new AmazonCognitoIdentity.CognitoUserAttribute(dataLocation);
+
+            attributeList.push(attributeEmail);
+            attributeList.push(attributePhoneNumber);
+            attributeList.push(attributeOccupation);
+            attributeList.push(attributeName);
+            attributeList.push(attributeGender);
+            attributeList.push(attributeAge);
+            attributeList.push(attributeLocation);
+            //alert(attributeList)
+            var cognitoUser;
+            userPool.signUp(username, password, attributeList, null, function (err, result) {
+                if (err) {
+                    alert(err.message || JSON.stringify(err));
+                    return;
+                }
+                cognitoUser = result.user;
+                console.log('user name is ' + cognitoUser.getUsername());
+            });
+        }   
+    </script>
+</head>
+
+<body>
+    <!-- <form> -->
+    <div class="container" align="center">
+        <img src="./logo.png" alt="Arrow Products"><br />
+        <input type="text" id="usernameSignUp" placeholder="Username" pattern=".*" name="user_username" required /><br>
+        <input type="text" id="nameSignUp" placeholder="Name" pattern=".*" name="user_name" required /><br>
+        <input type="email" id="emailSignUp" placeholder="Email" pattern=".*" name="user_email" required /><br>
+        <input type="text" id="phonenumberSignUp" placeholder="Phonenumber" pattern=".*" name="user_phonenumber"
+            maxlength="12" required /><br>
+        <input type="text" id="occupationSignUp" placeholder="Occupation" pattern=".*" name="user_occupation" required /><br>
+        <select name="gender" id="genderSignUp">
+            <option value="" disabled selected>Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="others">Others</option>
+        </select><br />
+        <input type="number" id="ageSignUp" placeholder="Age" pattern=".*" name="user_age" min="18" max="60"
+            required /><br>
+        <input type="text" id="locationSignUp" placeholder="Location" pattern=".*" name="user_location" required /><br>
+        <input type="password" id="passwordSignUp" placeholder="Password" pattern=".*" name="user_password"
+            required /><br>
+        <input type="password" id="confirmPasswordSignUp" placeholder="Confirm Password" pattern=".*"
+            name="user_confirmpassword" required /><br>
+        <table align="center">
+            <tr>
+                <td><button id="signUpButton" type="button" class="btn success" onclick="signUpButton()">Sign
+                        up</button></td>
+                <td><button type="reset" class="btn danger">Reset</button></td>
+            </tr>
+        </table>
+        <h4>Already have an account? <a href="./signIn.html">Sign in</a></h4>
+    </div>
+    <!-- </form> -->
+</body>
+
+</html>
