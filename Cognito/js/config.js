@@ -5,7 +5,7 @@ window._config = {
         clientId: 'bcgto49u0iskhm5vtme4am35h'
     },
     urls: {
-        arrowProductsURL: 'https://khv499.github.io/AWS/Cognito/app/arrowproducts.html',
+        portfolioURL: 'https://khv499.github.io/AWS/Cognito/app/index.html',
         signInURL: 'https://khv499.github.io/AWS/Cognito/signIn.html',
         signUpURL: 'https://khv499.github.io/AWS/Cognito/signUp.html',
         forgotPasswordURL: 'https://khv499.github.io/AWS/Cognito/forgotPassword.html',
